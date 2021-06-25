@@ -16,7 +16,10 @@
             display: none;
         }
 
-        li {
+        ul li {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: keep-all;
             padding-top: 3px;
             padding-bottom: 3px;
         }
@@ -26,7 +29,23 @@
 <body>
     <ol>
         <li v-for="(item, index) in items">
-            <a :href="'file/'+item+'.txt'">{{item}}</a>
+            <p>
+                {{item.filename}}
+            </p>
+            <ul>
+                <li>
+                    <a :href="'file/'+item.filename+''">{{item.filename}}</a>
+                </li>
+                <li>
+                    <a :href="'file/'+item.filename+'t'">{{item.filename}}t</a>
+                </li>
+                <li>
+                    <a :href="item.short">{{item.short}}</a>
+                </li>
+                <li>
+                    <a :href="item.url">{{item.url}}</a>
+                </li>
+            </ul>
         </li>
     </ol>
 </body>
@@ -34,10 +53,19 @@
 <script>
     Vue.createApp({
         data() {
+            const items = [
+                {
+                    filename: '210622', short: "https://suo.yt/6EZBvdA", url: ""
+                },
+                {
+                    filename: '210625', short: "https://suo.yt/Njb7gkI", url: ""
+                }
+            ];
+            items.forEach(e => {
+                e.url = `https://subcon.dlj.tf/sub?target=clash&new_name=true&url=https%3A%2F%2Flooki.netlify.app%2Ffile%2F${e.filename}t&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online.ini`
+            });
             return {
-                items: [
-                    '210622'
-                ]
+                items
             }
         }
     }).mount(document.body)
