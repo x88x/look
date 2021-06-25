@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="format-detection" content="adress=no" />
+    <style>
+        body:not([data-v-app]) {
+            display: none;
+        }
+
+        li {
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <ol>
+        <li v-for="(item, index) in items">
+            <a :href="'file/'+item+'.txt'">{{item}}</a>
+        </li>
+    </ol>
+</body>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    Vue.createApp({
+        data() {
+            return {
+                items: [
+                    '210622'
+                ]
+            }
+        }
+    }).mount(document.body)
+</script>
+
+</html>
