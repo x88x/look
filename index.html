@@ -23,31 +23,51 @@
             padding-top: 3px;
             padding-bottom: 3px;
         }
+
+        label {
+            padding: 5px 0;
+            display: block;
+            text-decoration: underline;
+            color: #2196f3;
+        }
+
+        input {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        input:not(:checked)+ul {
+            display: none;
+        }
     </style>
 </head>
 
 <body>
-    <ol>
-        <li v-for="(item, index) in items">
-            <p>
-                {{item.filename}}
-            </p>
-            <ul>
-                <li>
-                    <a :href="'file/'+item.filename+''">{{item.filename}}</a>
-                </li>
-                <li>
-                    <a :href="'file/'+item.filename+'t'">{{item.filename}}t</a>
-                </li>
-                <li>
-                    <a :href="item.short">{{item.short}}</a>
-                </li>
-                <li>
-                    <a :href="item.url">{{item.url}}</a>
-                </li>
-            </ul>
-        </li>
-    </ol>
+    <form>
+        <ol>
+            <li v-for="(item, index) in items">
+                <label :for="item.filename">
+                    {{item.filename}}
+                </label>
+                <input name="toggle" :id="item.filename" class="toggle" type="radio" v-model="openFilename"
+                    :value="item.filename" />
+                <ul v-if="openFilename==item.filename">
+                    <li>
+                        <a :href="'file/'+item.filename+''">{{item.filename}}</a>
+                    </li>
+                    <li>
+                        <a :href="'file/'+item.filename+'t'">{{item.filename}}t</a>
+                    </li>
+                    <li>
+                        <a :href="item.short">{{item.short}}</a>
+                    </li>
+                    <li>
+                        <a :href="item.url">{{item.url}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </form>
 </body>
 <script src="https://unpkg.com/vue@next"></script>
 <script>
@@ -78,12 +98,15 @@
                 {
                     filename: '210626d', short: "https://suo.yt/0PXt2c5", url: ""
                 }
-            ];
+            ].reverse();
+
             items.forEach(e => {
                 e.url = `https://subcon.dlj.tf/sub?target=clash&new_name=true&url=https%3A%2F%2Flooki.netlify.app%2Ffile%2F${e.filename}t&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online.ini`
             });
+
             return {
-                items
+                items,
+                openFilename: items[0].filename
             }
         }
     }).mount(document.body)
