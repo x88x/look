@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset='utf-8'>
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="format-detection" content="adress=no" />
+    <style>
+        body:not([data-v-app]) {
+            display: none;
+        }
+
+        ul li {
+            text-overflow: ellipsis;
+            overflow: hidden;
+            word-break: keep-all;
+            padding-top: 3px;
+            padding-bottom: 3px;
+        }
+
+        label {
+            padding: 5px 0;
+            display: block;
+            text-decoration: underline;
+            color: #2196f3;
+        }
+
+        input {
+            visibility: hidden;
+            position: absolute;
+        }
+
+        input:not(:checked)+ul {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <form>
+        <ol>
+            <li v-for="(item, index) in items">
+                <label :for="item.filename">
+                    {{item.filename}}
+                </label>
+                <input name="toggle" :id="item.filename" class="toggle" type="radio" v-model="openFilename"
+                    :value="item.filename" />
+                <ul v-if="openFilename==item.filename">
+                    <li>
+                        <a :href="'../file/'+item.filename+''">{{item.filename}}</a>
+                    </li>
+                    <li>
+                        <a :href="'../file/'+item.filename+'t'">{{item.filename}}t</a>
+                    </li>
+                    <li>
+                        <a :href="item.short">{{item.short}}</a>
+                    </li>
+                    <li>
+                        <a :href="item.url">{{item.url}}</a>
+                    </li>
+                </ul>
+            </li>
+        </ol>
+    </form>
+</body>
+<script src="https://unpkg.com/vue@next"></script>
+<script>
+    Vue.createApp({
+        data() {
+            const items = [
+                {
+                    filename: '210622', short: "https://suo.yt/6EZBvdA", url: ""
+                },
+                {
+                    filename: '210625', short: "https://suo.yt/Njb7gkI", url: ""
+                },
+                {
+                    filename: '210625b', short: "https://suo.yt/JYq2c25", url: ""
+                },
+                {
+                    filename: '210625c', short: "https://suo.yt/iCmkGeQ", url: ""
+                },
+                {
+                    filename: '210626', short: "https://suo.yt/mr8Rzz9", url: ""
+                },
+                {
+                    filename: '210626b', short: "https://suo.yt/OxC4g6y", url: ""
+                },
+                {
+                    filename: '210626c', short: "https://suo.yt/jlbJCGm", url: ""
+                },
+                {
+                    filename: '210626d', short: "https://suo.yt/0PXt2c5", url: ""
+                },
+                {
+                    filename: '210629', short: "https://suo.yt/soVEzPm", url: ""
+                },
+                {
+                    filename: '210629b', short: "https://suo.yt/EmsNStu", url: ""
+                },
+                {
+                    filename: '210630', short: "https://suo.yt/Igvor1v", url: ""
+                },
+                {
+                    filename: '210630b', short: "https://suo.yt/DT3VX8i", url: ""
+                },
+                {
+                    filename: '210701', short: "https://suo.yt/mNCseTf", url: ""
+                },
+                {
+                    filename: '210702', short: "https://suo.yt/XVXWduB", url: ""
+                },
+                {
+                    filename: '210705', short: "https://suo.yt/9JdZVoO", url: ""
+                },
+                {
+                    filename: '210706', short: "https://suo.yt/DNfifch", url: ""
+                },
+                {
+                    filename: '210708', short: "https://suo.yt/sAU3Wjf", url: ""
+                },
+                {
+                    filename: '210712', short: "https://suo.yt/f6w7qO1", url: ""
+                },
+                {
+                    filename: '210713', short: "https://suo.yt/qjeVvir", url: ""
+                },
+                {
+                    filename: '210714', short: "https://suo.yt/KMX9ojW", url: ""
+                },
+                {
+                    filename: '210719', short: "https://suo.yt/b0d9gyE", url: ""
+                }
+            ].reverse();//https://suo.yt/f6w7qO1
+
+            items.forEach(e => {
+                e.url = `https://subcon.dlj.tf/sub?target=clash&new_name=true&url=https%3A%2F%2Flooki.netlify.app%2Ffile%2F${e.filename}t&insert=false&config=https%3A%2F%2Fraw.githubusercontent.com%2FACL4SSR%2FACL4SSR%2Fmaster%2FClash%2Fconfig%2FACL4SSR_Online.ini`
+            });
+
+            return {
+                items,
+                openFilename: items[0].filename
+            }
+        }
+    }).mount(document.body)
+</script>
+
+</html>
