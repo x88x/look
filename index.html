@@ -17,25 +17,30 @@
             background-color: #000;
             --color: #aaa;
             --border-color: #4a4a4a;
+            font-size: 16px;
         }
 
         #app {
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-evenly;
-            row-gap: 1em;
-            padding-top: 1em;
-            padding-bottom: 1em;
+            justify-content: space-around;
+            column-gap: 1em;
+            padding: 0.5em 1em 1em 1em;
         }
 
         a {
-            display: block;
-            position: relative;
             width: 25%;
             max-width: 126px;
+            min-width: 80px;
+        }
+
+        a:not(:empty) {
+            display: block;
+            position: relative;
             color: var(--color);
             border: 1px solid var(--border-color);
             border-radius: 5px;
+            margin-top: 1em;
         }
 
         .icon {
@@ -95,13 +100,17 @@
             </div>
             <div class="text">黑色背景</div>
         </a>
-        <!-- <a href="./h5/t.html">
-            <div class="icon"
-                style="mask-image: url(icons/vpn.svg);-webkit-mask-image: url(icons/vpn.svg);">
-            </div>
-            <div class="text">梯子</div>
-        </a> -->
     </div>
+    <script>
+        (function (app, itemWidth, itemSpace) {
+            const count = app.children.length;
+            app.innerHTML += Array.from(new Array(count - 2)).map(() => '<a></a>').join('') + `<style>@media (min-width: ${count * itemWidth + (count + 1) * itemSpace}px) {
+            a:empty {
+                display: none;
+            }
+        }</style>`
+        }(document.getElementById('app'), 128, 16))
+    </script>
 </body>
 
 </html>
