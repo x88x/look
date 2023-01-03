@@ -3,6 +3,7 @@
 
 <head>
     <meta charset='utf-8'>
+    <title>导航</title>
     <meta name="viewport"
         content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1,user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -11,105 +12,96 @@
     <meta name="format-detection" content="telephone=no" />
     <meta name="format-detection" content="email=no" />
     <meta name="format-detection" content="adress=no" />
-    <style>
-        body {
-            margin: 0;
-            background-color: #000;
-            --color: #aaa;
-            --border-color: #4a4a4a;
-            font-size: 16px;
-        }
-
-        #app {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-            column-gap: 1em;
-            padding: 0.5em 1em 1em 1em;
-        }
-
-        a {
-            width: 25%;
-            max-width: 126px;
-            min-width: 80px;
-        }
-
-        a:not(:empty) {
-            display: block;
-            position: relative;
-            color: var(--color);
-            border: 1px solid var(--border-color);
-            border-radius: 5px;
-            margin-top: 1.5em;
-        }
-
-        .icon {
-            padding-top: 100%;
-            background-color: var(--color);
-            mask-size: 36%;
-            mask-repeat: no-repeat;
-            mask-position: center 30%;
-            -webkit-mask-size: 36%;
-            -webkit-mask-repeat: no-repeat;
-            -webkit-mask-position: center 30%;
-        }
-
-        .text {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 0.5em;
-            text-align: center;
-        }
-    </style>
+    <link href="./icomoon/style.css" rel="stylesheet" />
+    <link href="./style/index.css" rel="stylesheet" />
 </head>
 
 <body>
-    <div id="app">
+    <div class="app">
+        <a href="http://192.168.1.8:5140">
+            <div class="icon icon-chat-bot">
+            </div>
+            <div class="text">聊天机器</div>
+        </a>
+        <a href="http://192.168.1.2:5142">
+            <div class="icon icon-devices">
+            </div>
+            <div class="text">设备管理</div>
+        </a>
+        <a href="http://192.168.1.2:3000">
+            <div class="icon icon-image-service">
+            </div>
+            <div class="text">截图服务</div>
+        </a>
+        <a href="https://192.168.1.2:8443">
+            <div class="icon icon-wifi-controller">
+            </div>
+            <div class="text">华硕路由</div>
+        </a>
+        <a href="http://192.168.1.1">
+            <div class="icon icon-network-public">
+            </div>
+            <div class="text">移动路由</div>
+        </a>
+    </div>
+    <h3>外网</h3>
+    <div class="app" id="content">
         <a href="https://bot.innerapp.top">
-            <div class="icon" style="mask-image: url(icons/chat.bot.svg);-webkit-mask-image: url(icons/chat.bot.svg);">
+            <div class="icon icon-chat-bot">
             </div>
             <div class="text">聊天机器</div>
         </a>
         <a href="https://device.innerapp.top">
-            <div class="icon" style="mask-image: url(icons/devices.svg);-webkit-mask-image: url(icons/devices.svg);">
+            <div class="icon icon-devices">
             </div>
             <div class="text">设备管理</div>
         </a>
         <a href="https://screenshot.innerapp.top">
-            <div class="icon"
-                style="mask-image: url(icons/image.service.svg);-webkit-mask-image: url(icons/image.service.svg);">
+            <div class="icon icon-image-service">
             </div>
             <div class="text">截图服务</div>
         </a>
         <a href="https://asus.innerapp.top">
-            <div class="icon"
-                style="mask-image: url(icons/wifi.controller.svg);-webkit-mask-image: url(icons/wifi.controller.svg);">
+            <div class="icon icon-wifi-controller">
             </div>
             <div class="text">华硕路由</div>
         </a>
         <a href="https://route.innerapp.top">
-            <div class="icon"
-                style="mask-image: url(icons/network.public.svg);-webkit-mask-image: url(icons/network.public.svg);">
+            <div class="icon icon-network-public">
             </div>
             <div class="text">移动路由</div>
         </a>
+        <a href="./h5/github.list.html">
+            <div class="icon icon-logo-github">
+            </div>
+            <div class="text">Github</div>
+        </a>
         <a href="./h5/black.html">
-            <div class="icon"
-                style="mask-image: url(icons/window.black.saturation.svg);-webkit-mask-image: url(icons/window.black.saturation.svg);">
+            <div class="icon icon-window-black-saturation">
             </div>
             <div class="text">黑色背景</div>
         </a>
     </div>
+    <div id="bottom"></div>
     <script>
-        (function (app, itemWidth, itemSpace) {
-            const count = app.children.length;
-            app.innerHTML += Array.from(new Array(count - 2)).map(() => '<a></a>').join('') + `<style>@media (min-width: ${count * itemWidth + (count + 1) * itemSpace}px) {
-            a:empty {
-                display: none;
-            }
-        }</style>`
-        }(document.getElementById('app'), 128, 16))
+        (function (apps, itemWidth, itemSpace) {
+            [].slice.call(apps).forEach((app, index) => {
+                app.classList.add(`app${index}`);
+                const count = app.children.length;
+                app.innerHTML += Array.from(new Array(count - 2)).map(() => '<a></a>').join('') + `<style>@media (min-width: ${count * itemWidth + (count + 1) * itemSpace}px) {
+    .app${index} a:empty {
+        display: none;
+    }
+}</style>`})
+        }(document.querySelectorAll('.app'), 128, 16));
+        window.onload = function () {
+            const top = document.getElementById('content').offsetTop;
+            document.getElementById('bottom').style.height = `${top + Math.max(innerHeight - document.body.offsetHeight, 0)}px`;
+            window.scrollTo(0, top);
+            requestAnimationFrame(() => {
+                window.scrollTo(0, top)
+            })
+        }
     </script>
 </body>
 

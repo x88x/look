@@ -1,0 +1,14 @@
+html {
+    background-color: #000;
+}
+
+body {
+    --color: #aaa;
+    --border-color: #4a4a4a;
+    font-size: 16px;
+    color: var(--color);
+}
+
+a {
+    color: var(--color);
+}

@@ -1,0 +1,66 @@
+body {
+    margin: 0;
+    background-color: #000;
+    --color: #aaa;
+    --border-color: #4a4a4a;
+    font-size: 16px;
+    color: var(--color);
+}
+
+h3{
+    text-align: center;
+}
+
+.app {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    column-gap: 1em;
+    padding: 0.5em 1em 1em 1em;
+}
+
+a {
+    width: 25%;
+    max-width: 126px;
+    min-width: 80px;
+}
+
+a:not(:empty) {
+    display: block;
+    position: relative;
+    color: var(--color);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-top: 1.5em;
+}
+
+a:not(:empty)::before {
+    content: "";
+    display: block;
+    padding-top: 100%;
+}
+
+.icon {
+    color: var(--color);
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2.25em;
+}
+
+.icon::before {
+    margin-top: -0.5em;
+}
+
+.text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0.5em;
+    text-align: center;
+}
