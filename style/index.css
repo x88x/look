@@ -1,10 +1,5 @@
 body {
     margin: 0;
-    background-color: #000;
-    --color: #aaa;
-    --border-color: #4a4a4a;
-    font-size: 16px;
-    color: var(--color);
 }
 
 h3{
