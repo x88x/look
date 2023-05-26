@@ -29,8 +29,8 @@
                         <input type="text" v-model="row.name" @change="saveList" />
                         <button @click="del(index)" class="del-button">删除</button>
                     </div>
-                    <div class="img-box">
-                        <img :src="row.url" />
+                    <div class="img-box" @paste="filePaste($event,row)" contenteditable="true" :style="{backgroundImage:`url(${row.url})`}">
+                        <!-- <img :src="row.url" /> -->
                     </div>
                 </li>
             </ul>
@@ -155,6 +155,12 @@
                 function fileDropLeave(e, row) {
                     row.status = 0
                 }
+                
+                async function filePaste(e, row){                    
+                    e.preventDefault();
+                    const [file] = e.clipboardData.files;
+                    row.url = await fileToBase64(file)
+                }
 
                 async function download() {
                     const canvas = await screenshot('.screenshot-content')
@@ -180,6 +186,7 @@
                     fileDropEnter,
                     fileDrop,
                     fileDropLeave,
+                    filePaste,
                     download,
                     clearCache
                 }

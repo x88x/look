@@ -47,15 +47,17 @@
 .app .img-box {
     flex: 1;
     height: 0%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    color: transparent;
+    user-select: none;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
-.app img {
+/* .app img {
     max-width: 100%;
     max-height: 100%;
-}
+} */
 
 input[type="text"],input[type="number"] {
     border: none;
