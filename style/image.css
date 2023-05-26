@@ -57,10 +57,25 @@
     max-height: 100%;
 }
 
-input {
+input[type="text"],input[type="number"] {
     border: none;
     padding: .5em .75em;
+}
 
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+
+input[type="color"]::-webkit-color-swatch {
+    border: none;
+}
+
+input[type="color"] {
+    padding: 0;
+}
+
+label input,label span{
+    vertical-align: middle;
 }
 
 button {
@@ -122,18 +137,22 @@ dialog {
     display: block;
 }
 
-dialog input:not([type="checkbox"]){
-    border:1px solid #aaa;
+dialog input:not([type="checkbox"]) {
+    border: 1px solid #aaa;
 }
 
-dialog{
+dialog {
     box-shadow: 0 0 8px 0 #000;
     border-color: #fafafa;
 }
 
-.device-border{
-    box-shadow: 0 0 8px 0 #000;
+.device-border {
+    box-shadow: 0 0 5px 0 #000a;
     background-color: #333;
     border-radius: 5px;
-    padding: 8px;
+    padding: 4px;
+}
+
+.device-border img {
+    border-radius: 3px;
 }

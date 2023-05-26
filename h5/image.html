@@ -26,7 +26,7 @@
                     @drop="fileDrop($event,row)" @dragleave="fileDropLeave($event,row)"
                     :class="{'--reject':row.status===-1,'--accept':row.status===1}">
                     <div class="input-row">
-                        <input v-model="row.name" @change="saveList" />
+                        <input type="text" v-model="row.name" @change="saveList" />
                         <button @click="del(index)" class="del-button">删除</button>
                     </div>
                     <div class="img-box">
@@ -37,7 +37,7 @@
         </div>
         <dialog :open="dialog">
             <div class="input-row">
-                <input placeholder="文件名" v-model="values.filename" />
+                <input type="text" placeholder="文件名" v-model="values.filename" />
                 <button class="add-button" @click="download">下载</button>
                 <button class="del-button" @click="dialog=false">关闭</button>
             </div>
@@ -56,8 +56,10 @@
                     <input v-model="values.imageWidth" type="number" />
                     </p>
                     <p>
-                    <div>图像边框</div>
-                    <input v-model="values.imageBorder" type="checkbox" />
+                        <label>
+                            <input v-model="values.imageBorder" type="checkbox" />
+                            <span>图像边框</span>
+                        </label>
                     </p>
                 </div>
                 <div class="screenshot-content">
@@ -109,7 +111,7 @@
                     { name: 'IOS', id: id + n++ },
                     { name: '公众号', id: id + n++ }
                 ]))
-                const values = reactive(localStorage.getJson('values', { filename: "", imageWidth: 410, imageBorder: false, fontSize: 30, textColor: "#f00" }));
+                const values = reactive(localStorage.getJson('values', { filename: "", imageWidth: 410, imageBorder: false, fontSize: 30, textColor: "#ff0000" }));
 
                 const displayList = computed(() => list.value.filter(e => e.url))
 
