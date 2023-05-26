@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>图片合并</title>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta content="webkit" name="renderer" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <link href="../style/image.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="../js/rasterizeHTML.allinone.min.js"></script>
+    <div id="app" v-clock>
+        <div class="app">
+            <header>
+                <button @click="add" class="add-button">添加</button>
+                <button @click="dialog=true" class="add-button">合成</button>
+            </header>
+            <ul>
+                <li v-for="(row, index) of list" :key="row.id" @dragover="fileDropEnter($event,row)"
+                    @drop="fileDrop($event,row)" @dragleave="fileDropLeave($event,row)"
+                    :class="{'--reject':row.status===-1,'--accept':row.status===1}">
+                    <div class="input-row">
+                        <input v-model="row.name" @change="saveList" />
+                        <button @click="del(index)" class="del-button">删除</button>
+                    </div>
+                    <div class="img-box">
+                        <img :src="row.url" />
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <dialog :open="dialog">
+            <div class="input-row">
+                <input placeholder="文件名" v-model="values.filename" />
+                <button class="add-button" @click="download">下载</button>
+                <button class="del-button" @click="dialog=false">关闭</button>
+            </div>
+            <div class="screenshot">
+                <div>
+                    <p>
+                    <div>字号</div>
+                    <input v-model="values.fontSize" type="number" />
+                    </p>
+                    <p>
+                    <div>颜色</div>
+                    <input v-model="values.textColor" type="color" />
+                    </p>
+                    <p>
+                    <div>图片宽度</div>
+                    <input v-model="values.imageWidth" type="number" />
+                    </p>
+                    <p>
+                    <div>图像边框</div>
+                    <input v-model="values.imageBorder" type="checkbox" />
+                    </p>
+                </div>
+                <div class="screenshot-content">
+                    <ul>
+                        <li v-for="row of displayList" :key="row.id">
+                            <div class="name" :style="{fontSize:values.fontSize+'px',color:values.textColor}">
+                                {{row.name}}</div>
+                            <div :class="{'device-border':values.imageBorder}">
+                                <img :src="row.url" :style="{width:values.imageWidth+'px'}">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </dialog>
+    </div>
+    <script>
+        Object.defineProperties(Storage.prototype, {
+            getJson: {
+                value: function (key, defaultValue) {
+                    try {
+                        return JSON.parse(this.getItem(key)) || defaultValue
+                    } catch (error) {
+                        return defaultValue
+                    }
+                }
+            },
+            setJson: {
+                value: function (key, value) {
+                    this.setItem(key, JSON.stringify(value))
+                }
+            }
+        })
+    </script>
+    <script type="module">
+        import screenshot from "../js/screenshot.js";
+        import { downloadFile, fileToBase64 } from "../js/file.js";
+
+        const { createApp, ref, reactive, computed } = Vue;
+
+        createApp({
+            setup() {
+                const id = Math.random().toString(36);
+                let n = 0;
+
+                const dialog = ref(false)
+                const list = ref(localStorage.getJson('list', [
+                    { name: 'Android', id: id + n++ },
+                    { name: 'IOS', id: id + n++ },
+                    { name: '公众号', id: id + n++ }
+                ]))
+                const values = reactive(localStorage.getJson('values', { filename: "", imageWidth: 410, imageBorder: false, fontSize: 20, textColor: "#000" }));
+
+                const displayList = computed(() => list.value.filter(e => e.url))
+
+                function add() {
+                    list.value.push({ name: "", id: id + n++ })
+                }
+
+                function del(index) {
+                    list.value.splice(index, 1)
+                    saveList()
+                }
+
+                function saveList() {
+                    localStorage.setJson('list', list.value.filter(e => e.name.trim()))
+                }
+
+                function saveValues() {
+                    localStorage.setJson('values', values)
+                }
+
+                function fileDropEnter(e, row) {
+                    e.preventDefault();
+                    const [file] = e.dataTransfer.items;
+                    row.status = file.type.startsWith('image') ? 1 : -1;
+                }
+
+                async function fileDrop(e, row) {
+                    e.preventDefault();
+                    row.status = 0;
+                    const [file] = e.dataTransfer.files;
+                    // if (row.url) {
+                    //     URL.revokeObjectURL(row.url)
+                    // }
+                    // row.url = URL.createObjectURL(file)
+                    row.url = await fileToBase64(file)
+                }
+
+                function fileDropLeave(e, row) {
+                    row.status = 0
+                }
+
+                async function download() {
+                    const canvas = await screenshot('.screenshot-content')
+                    canvas.toBlob((blob) => {
+                        saveValues();
+                        downloadFile(blob, values.filename)
+                    })
+                }
+
+                return {
+                    dialog,
+                    list,
+                    displayList,
+                    values,
+                    add,
+                    del,
+                    saveList,
+                    fileDropEnter,
+                    fileDrop,
+                    fileDropLeave,
+                    download
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>
