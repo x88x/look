@@ -19,6 +19,7 @@
             <header>
                 <button @click="add" class="add-button">添加</button>
                 <button @click="dialog=true" class="add-button">合成</button>
+                <button @click="clearCache">清除缓存配置</button>
             </header>
             <ul>
                 <li v-for="(row, index) of list" :key="row.id" @dragover="fileDropEnter($event,row)"
@@ -108,7 +109,7 @@
                     { name: 'IOS', id: id + n++ },
                     { name: '公众号', id: id + n++ }
                 ]))
-                const values = reactive(localStorage.getJson('values', { filename: "", imageWidth: 410, imageBorder: false, fontSize: 20, textColor: "#000" }));
+                const values = reactive(localStorage.getJson('values', { filename: "", imageWidth: 410, imageBorder: false, fontSize: 30, textColor: "#f00" }));
 
                 const displayList = computed(() => list.value.filter(e => e.url))
 
@@ -122,7 +123,10 @@
                 }
 
                 function saveList() {
-                    localStorage.setJson('list', list.value.filter(e => e.name.trim()))
+                    const saveKey = ['name', 'id']
+                    localStorage.setJson('list', list.value.filter(e => e.name.trim()).map(e => {
+                        return Object.fromEntries(saveKey.map(k => [k, e[k]]))
+                    }))
                 }
 
                 function saveValues() {
@@ -158,6 +162,11 @@
                     })
                 }
 
+                function clearCache() {
+                    localStorage.removeItem('list');
+                    localStorage.removeItem('values')
+                }
+
                 return {
                     dialog,
                     list,
@@ -169,7 +178,8 @@
                     fileDropEnter,
                     fileDrop,
                     fileDropLeave,
-                    download
+                    download,
+                    clearCache
                 }
             }
         }).mount('#app')

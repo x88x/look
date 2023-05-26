@@ -66,7 +66,6 @@ input {
 button {
     padding: .5em .75em;
     border: none;
-    color: #fff;
 }
 
 input,
@@ -76,10 +75,12 @@ button {
 
 .add-button {
     background-color: dodgerblue;
+    color: #fff;
 }
 
 .del-button {
-    background-color: orangered
+    background-color: orangered;
+    color: #fff;
 }
 
 
