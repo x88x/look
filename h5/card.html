@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <title>图片合并</title>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta content="webkit" name="renderer" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="pragma" content="no-cache" />
+    <link href="../style/card.css" rel="stylesheet" />
+</head>
+
+<body>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="../js/storage.js"></script>
+    <div id="app" v-clock>
+        <div class="app">
+            <header>
+                <button @click="saveValues" class="add-button">保存数据</button>
+                <button @click="clearCache">清除缓存配置</button>
+            </header>
+            <ul>
+                <li v-for="(row, index) of list.slice(0,1)" :key="row.id" @dragover="fileDropEnter($event,row)"
+                    @drop="fileDrop($event,row)" @dragleave="fileDropLeave($event,row)"
+                    :class="{'--reject':row.status===-1,'--accept':row.status===1}">
+                    <div class="img-box" @paste="filePaste($event,row)" contenteditable="true"
+                        :style="{backgroundImage:row.backgroundImage}">
+                        <div class="card-img" v-if="row.url">
+                            <img :src="row.url" />
+                        </div>
+                        <div style="position: absolute;
+                        top: 223px;
+                        left: 145px;
+                        display: flex;
+                        color: #000;
+                        font-size: 20px;
+                        width: 9em;
+                        justify-content: space-between;">
+                            <div style="width: 3.3em;">{{date.y}}</div>
+                            <div>{{date.m}}</div>
+                            <div>{{date.d}}</div>
+                        </div>
+                        <input v-model="values.id" style="    top: 405px;
+                        left: 234px;
+                        font-size: 26px;
+                        letter-spacing: 4px;
+                        width: 16em;
+                        font-weight: bolder;" />
+                        <input v-model="values.name" style="    top: 132px;
+                        left: 145px;
+                    " />
+                        <input v-model="values.A" style="    top: 179px;left: 277px" />
+                        <input v-model="values.B" style="     top: 179px;
+                        left: 143px;
+                        width: 30px;" />
+                        <textarea v-model="values.C" style="    top: 281px;
+                        left: 145px;
+                    "></textarea>
+                    </div>
+                </li>
+                <li>
+                    <div class="img-box" :style="{backgroundImage:list[1].backgroundImage}">
+                        <input v-model="values.D" style="    top: 371px;
+                        left: 256px;" />
+                        <input v-model="values.E" style="      top: 424px;
+                        left: 256px;
+                    
+                    " />
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script type="module">
+
+        const { createApp, ref, reactive, computed } = Vue;
+
+        createApp({
+            setup() {
+                const dialog = ref(false);
+                const list = ref([
+                    { backgroundImage: 'url(../images/card/正.png)' },
+                    { backgroundImage: 'url(../images/card/反.png)' }
+                ])
+                const values = reactive(localStorage.getJson('card.values', {
+                    //filename: "",
+                    id: "",
+                    name: "提提那扎尔·阿依古丽",
+                    A: "维吾尔",
+                    B: "女",
+                    C: "新疆维吾尔自治区阿克苏地区乌什县依麻木镇玉斯屯克和田村13组25号",
+                    D: "乌什县公安局",
+                    E: "2019.07.12-2039.07.12"
+                }))
+
+                const date = computed(() => {
+                    return {
+                        y: values.id.slice(6, 10),
+                        m: values.id.slice(10, 12),
+                        d: values.id.slice(12, 14)
+                    }
+                })
+
+                function saveValues() {
+                    localStorage.setJson('card.values', values)
+                }
+
+                function fileDropEnter(e, row) {
+                    e.preventDefault();
+                    const [file] = e.dataTransfer.items;
+                    row.status = file.type.startsWith('image') ? 1 : -1;
+                }
+
+                async function fileDrop(e, row) {
+                    e.preventDefault();
+                    row.status = 0;
+                    const [file] = e.dataTransfer.files;
+                    if (row.url) {
+                        URL.revokeObjectURL(row.url)
+                    }
+                    row.url = URL.createObjectURL(file)
+                }
+
+                function fileDropLeave(e, row) {
+                    row.status = 0
+                }
+
+                async function filePaste(e, row) {
+                    e.preventDefault();
+                    const [file] = e.clipboardData.files;
+                    if (row.url) {
+                        URL.revokeObjectURL(row.url)
+                    }
+                    row.url = URL.createObjectURL(file)
+                }
+
+                async function download() {
+                    const canvas = await screenshot('.screenshot-content')
+                    canvas.toBlob((blob) => {
+                        saveValues();
+                        downloadFile(blob, values.filename)
+                    })
+                }
+
+                function clearCache() {
+                    localStorage.removeItem('card.list');
+                    localStorage.removeItem('card.values')
+                }
+
+                return {
+                    dialog,
+                    list,
+                    values,
+                    date,
+                    saveValues,
+                    fileDropEnter,
+                    fileDrop,
+                    fileDropLeave,
+                    filePaste,
+                    download,
+                    clearCache
+                }
+            }
+        }).mount('#app')
+    </script>
+</body>
+
+</html>

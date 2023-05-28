@@ -14,6 +14,8 @@
 <body>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="../js/rasterizeHTML.allinone.min.js"></script>
+    <script src="../js/storage.js"></script>
+
     <div id="app" v-clock>
         <div class="app">
             <header>
@@ -29,7 +31,8 @@
                         <input type="text" v-model="row.name" @change="saveList" />
                         <button @click="del(index)" class="del-button">删除</button>
                     </div>
-                    <div class="img-box" @paste="filePaste($event,row)" contenteditable="true" :style="{backgroundImage:`url(${row.url})`}">
+                    <div class="img-box" @paste="filePaste($event,row)" contenteditable="true"
+                        :style="{backgroundImage:`url(${row.url})`}">
                         <!-- <img :src="row.url" /> -->
                     </div>
                 </li>
@@ -76,24 +79,6 @@
             </div>
         </dialog>
     </div>
-    <script>
-        Object.defineProperties(Storage.prototype, {
-            getJson: {
-                value: function (key, defaultValue) {
-                    try {
-                        return JSON.parse(this.getItem(key)) || defaultValue
-                    } catch (error) {
-                        return defaultValue
-                    }
-                }
-            },
-            setJson: {
-                value: function (key, value) {
-                    this.setItem(key, JSON.stringify(value))
-                }
-            }
-        })
-    </script>
     <script type="module">
         import screenshot from "../js/screenshot.js";
         import { downloadFile, fileToBase64 } from "../js/file.js";
@@ -155,8 +140,8 @@
                 function fileDropLeave(e, row) {
                     row.status = 0
                 }
-                
-                async function filePaste(e, row){                    
+
+                async function filePaste(e, row) {
                     e.preventDefault();
                     const [file] = e.clipboardData.files;
                     row.url = await fileToBase64(file)
