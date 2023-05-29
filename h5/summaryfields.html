@@ -1,0 +1,10 @@
+<script>
+    function textOnChange() {
+        output.textContent = '';
+        output.textContent = JSON.stringify(Object.keys(JSON.parse(txt.value.trim()).data.sumdatasource))
+    }
+</script>
+<textarea onchange="textOnChange()" id="txt"></textarea>
+<div id="output" style="word-break: break-all;">
+
+</div>
