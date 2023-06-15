@@ -127,8 +127,11 @@
                 }
 
                 async function filePaste(e, row) {
+                    const [file] = e.clipboardData.files;                    
+                    if(!(file&&file.type.startsWith('image'))){
+                        return
+                    }                    
                     e.preventDefault();
-                    const [file] = e.clipboardData.files;
                     if (row.url) {
                         URL.revokeObjectURL(row.url)
                     }

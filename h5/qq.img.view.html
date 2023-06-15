@@ -1,0 +1,93 @@
+<div id="app">
+    <textarea v-model="value" @change="onChange"></textarea>
+    <div class="imgbox">
+        <img :src="url" crossorigin="anonymous">
+        <div class="left" @click="nav(-1)"></div>
+        <div class="right" @click="nav(1)"></div>
+    </div>
+    <ul>
+        <li v-for="(li, index) of ls">
+            <a :href="li" target="_blank">{{index}}</a>
+        </li>
+    </ul>
+</div>
+<style>
+    .imgbox {
+        width: 320px;
+        height: 568px;
+        position: relative;
+    }
+
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+
+    .left,
+    .right {
+        position: absolute;
+        width: 50%;
+        height: 100%;
+        top: 0;
+    }
+
+    .left {
+        left: 0;
+    }
+
+    .right {
+        right: 0;
+    }
+</style>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<script type="module">
+
+    const { createApp, ref, reactive } = Vue;
+
+    createApp({
+        setup() {
+            const value = ref('');
+            const url = ref('');
+            const ls = ref([]);
+            let index = 0;
+
+            function nav(d) {
+                index += d
+                index = Math.max(0, Math.min(index, ls.value.length - 1));
+                url.value = ls.value[index]
+            }
+
+            function onChange() {
+                ls.value.length = 0;
+                const imgs = value.value.split('\n').map(e => e.match(/\[CQ\:image[^\]]+?\]/)).filter(e => e).map(e => {
+                    return e[0].slice(1, e[0].indexOf(']'))
+                }).map(e => {
+                    let url = ''
+                    e.split(",").some(e => {
+                        const [key, ...value] = e.split('=')
+                        if (key === 'url') {
+                            url = value.join('=').replace(/&amp;/g, '&')
+                            return true
+                        }
+                    })
+                    return url
+                })
+                ls.value.push(...new Set(imgs));
+                nav(0)
+            }
+
+            fetch('../temp/qq.nohup.txt').then(e=>e.text()).then(e=>{
+                value.value=e;
+                onChange()
+            })
+
+            return {
+                value,
+                url,
+                ls,
+                nav,
+                onChange
+            }
+        }
+    }).mount('#app')
+</script>
