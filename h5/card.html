@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="../js/storage.js"></script>
     <div id="app" v-clock>
         <div class="app">
@@ -73,8 +72,7 @@
         </div>
     </div>
     <script type="module">
-
-        const { createApp, ref, reactive, computed } = Vue;
+        import { createApp, ref, reactive, computed } from "../js/vue@3.3.12.js";
 
         createApp({
             setup() {

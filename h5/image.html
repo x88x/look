@@ -12,7 +12,6 @@
 </head>
 
 <body>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="../js/rasterizeHTML.allinone.min.js"></script>
     <script src="../js/storage.js"></script>
 
@@ -82,8 +81,7 @@
     <script type="module">
         import screenshot from "../js/screenshot.js";
         import { downloadFile, fileToBase64 } from "../js/file.js";
-
-        const { createApp, ref, reactive, computed } = Vue;
+        import { createApp, ref, reactive, computed } from "../js/vue@3.3.12.js";
 
         createApp({
             setup() {
